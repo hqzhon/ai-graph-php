@@ -25,7 +25,7 @@ A minimal viable product (MVP) implementation of a PHP application with Workflow
 
 1. Clone the repository:
    ```
-   git clone <repository-url>
+   git clone https://github.com/hqzhon/ai-graph-php
    ```
 
 2. Install dependencies:
