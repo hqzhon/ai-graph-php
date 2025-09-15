@@ -1,0 +1,52 @@
+# Dependencies
+/vendor/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# IDE
+/.idea/
+.vscode/
+*.swp
+*.swo
+*.DS_Store
+Thumbs.db
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+/var/logs/*.log
+logs/*.log
+
+# Cache
+cache/
+tmp/
+temp/
+
+# Composer
+composer.phar
+composer.lock
+
+# Checkpoints
+/tmp/agent_checkpoints/
+
+# PHPUnit
+coverage/
+phpunit.xml
+phpunit.xml.dist
+
+# Build artifacts
+/build/
+/dist/
+
+# Configuration (local)
+config/model.php
+
+# Runtime
+*.pid
+*.sock
