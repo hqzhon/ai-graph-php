@@ -2,7 +2,7 @@
 
 namespace App\Agent\ErrorHandling;
 
-use App\LangGraph\State\GraphState;
+use App\UnifiedGraph\State\State;
 
 class StateRecovery
 {
@@ -22,10 +22,10 @@ class StateRecovery
      * 保存状态检查点
      * 
      * @param string $checkpointId 检查点ID
-     * @param GraphState $state 状态
+     * @param State $state 状态
      * @return void
      */
-    public function saveCheckpoint(string $checkpointId, GraphState $state): void
+    public function saveCheckpoint(string $checkpointId, State $state): void
     {
         $filename = $this->checkpointDirectory . '/' . $checkpointId . '.json';
         $data = json_encode($state->getData());
@@ -36,9 +36,9 @@ class StateRecovery
      * 恢复状态检查点
      * 
      * @param string $checkpointId 检查点ID
-     * @return GraphState|null
+     * @return State|null
      */
-    public function restoreCheckpoint(string $checkpointId): ?GraphState
+    public function restoreCheckpoint(string $checkpointId): ?State
     {
         $filename = $this->checkpointDirectory . '/' . $checkpointId . '.json';
         
@@ -53,7 +53,7 @@ class StateRecovery
             return null;
         }
         
-        return new GraphState($stateData);
+        return new State($stateData);
     }
     
     /**

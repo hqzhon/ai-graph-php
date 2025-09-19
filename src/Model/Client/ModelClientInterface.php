@@ -12,7 +12,16 @@ interface ModelClientInterface
      * @return string 模型响应
      */
     public function chatComplete(array $messages, array $options = []): string;
-    
+
+    /**
+     * 流式发送聊天完成请求
+     * 
+     * @param array $messages 消息数组
+     * @param array $options 附加选项
+     * @return \Generator 模型响应的数据块
+     */
+    public function streamChatComplete(array $messages, array $options = []): \Generator;
+
     /**
      * 获取模型名称
      * 

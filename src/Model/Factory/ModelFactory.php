@@ -39,6 +39,25 @@ class ModelFactory
                 return new QwenClient($apiKey);
                 
             default:
+                // 尝试根据模型名称判断类型
+                if (strpos(strtolower($modelType), 'deepseek') !== false) {
+                    $apiKey = $this->config['deepseek_api_key'] ?? getenv('DEEPSEEK_API_KEY');
+                    if (!$apiKey) {
+                        throw new \InvalidArgumentException('DeepSeek API key is required for model: ' . $modelType);
+                    }
+                    $client = new DeepSeekClient($apiKey);
+                    $client->setModelName($modelType);
+                    return $client;
+                } elseif (strpos(strtolower($modelType), 'qwen') !== false) {
+                    $apiKey = $this->config['qwen_api_key'] ?? getenv('QWEN_API_KEY');
+                    if (!$apiKey) {
+                        throw new \InvalidArgumentException('Qwen API key is required for model: ' . $modelType);
+                    }
+                    $client = new QwenClient($apiKey);
+                    $client->setModelName($modelType);
+                    return $client;
+                }
+                
                 throw new \InvalidArgumentException("Unsupported model type: $modelType");
         }
     }

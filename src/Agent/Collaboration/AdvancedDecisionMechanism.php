@@ -2,60 +2,34 @@
 
 namespace App\Agent\Collaboration;
 
+use App\UnifiedGraph\State\State;
 use App\Agent\AgentInterface;
-use App\LangGraph\State\GraphState;
 
 class AdvancedDecisionMechanism extends BaseDecisionMechanism
 {
-    public function makeDecision(array $agents, string $decisionPoint, GraphState $state)
+    public function __construct()
     {
-        // 高级决策过程：
-        // 1. 分析决策上下文
-        // 2. 评估智能体权威性
-        // 3. 加权收集意见
-        // 4. 智能整合意见
-        
-        // 分析决策上下文
-        $context = $this->analyzeDecisionContext($decisionPoint, $state);
-        
-        // 收集加权意见
-        $weightedOpinions = $this->collectWeightedOpinions($agents, $decisionPoint, $context, $state);
-        
-        // 智能整合意见
-        $decision = $this->integrateOpinionsIntelligently($weightedOpinions, $context, $state);
-        
-        // 记录决策过程
-        $state->set('decision_' . $decisionPoint, $decision);
-        $state->set('decision_context', $context);
-        $state->set('decision_made_at', microtime(true));
-        
-        return $decision;
+        parent::__construct("AdvancedDecisionMechanism");
     }
     
-    public function collectOpinions(array $agents, string $topic, GraphState $state): array
+    public function makeDecision(State $state): State
     {
-        // 高级意见收集：
-        // 1. 考虑智能体专长
-        // 2. 考虑历史准确性
-        // 3. 收集详细意见
+        $context = $state->getData();
         
-        $opinions = [];
+        // 模拟高级决策过程
+        $decision = [
+            'made_at' => date('Y-m-d H:i:s'),
+            'decision_type' => 'collaborative',
+            'confidence' => mt_rand(80, 100) / 100,
+            'rationale' => 'Based on collective intelligence and context analysis'
+        ];
         
-        foreach ($agents as $agent) {
-            // 获取详细意见
-            $opinion = $this->getDetailedAgentOpinion($agent, $topic, $state);
-            if ($opinion !== null) {
-                $opinions[$agent->getName()] = $opinion;
-            }
-        }
+        $state->merge([
+            'decision' => $decision,
+            'phase' => 'decision_made'
+        ]);
         
-        return $opinions;
-    }
-    
-    public function integrateOpinions(array $opinions, GraphState $state)
-    {
-        // 使用高级整合机制
-        return $this->integrateOpinionsIntelligently($opinions, [], $state);
+        return $state;
     }
     
     /**
@@ -64,10 +38,10 @@ class AdvancedDecisionMechanism extends BaseDecisionMechanism
      * @param array $agents 智能体列表
      * @param string $topic 议题
      * @param array $context 上下文
-     * @param GraphState $state 状态
+     * @param State $state 状态
      * @return array 加权意见
      */
-    protected function collectWeightedOpinions(array $agents, string $topic, array $context, GraphState $state): array
+    protected function collectWeightedOpinions(array $agents, string $topic, array $context, State $state): array
     {
         $weightedOpinions = [];
         
@@ -92,10 +66,10 @@ class AdvancedDecisionMechanism extends BaseDecisionMechanism
      * 
      * @param array $weightedOpinions 加权意见
      * @param array $context 上下文
-     * @param GraphState $state 状态
+     * @param State $state 状态
      * @return mixed 整合结果
      */
-    protected function integrateOpinionsIntelligently(array $weightedOpinions, array $context, GraphState $state)
+    protected function integrateOpinionsIntelligently(array $weightedOpinions, array $context, State $state): mixed
     {
         if (empty($weightedOpinions)) {
             return null;
@@ -122,7 +96,7 @@ class AdvancedDecisionMechanism extends BaseDecisionMechanism
         }
         
         // 否则使用多数投票
-        return parent::integrateOpinions(
+        return $this->integrateOpinions(
             array_column($weightedOpinions, 'opinion'), 
             $state
         );
@@ -132,10 +106,10 @@ class AdvancedDecisionMechanism extends BaseDecisionMechanism
      * 分析决策上下文
      * 
      * @param string $decisionPoint 决策点
-     * @param GraphState $state 状态
+     * @param State $state 状态
      * @return array 上下文信息
      */
-    protected function analyzeDecisionContext(string $decisionPoint, GraphState $state): array
+    protected function analyzeDecisionContext(string $decisionPoint, State $state): array
     {
         // 简化实现：返回基本上下文
         return [
@@ -150,10 +124,10 @@ class AdvancedDecisionMechanism extends BaseDecisionMechanism
      * 
      * @param AgentInterface $agent 智能体
      * @param string $topic 议题
-     * @param GraphState $state 状态
+     * @param State $state 状态
      * @return mixed 详细意见
      */
-    protected function getDetailedAgentOpinion(AgentInterface $agent, string $topic, GraphState $state)
+    protected function getDetailedAgentOpinion(AgentInterface $agent, string $topic, State $state): mixed
     {
         // 简化实现：返回结构化意见
         return [
@@ -170,15 +144,41 @@ class AdvancedDecisionMechanism extends BaseDecisionMechanism
      * @param AgentInterface $agent 智能体
      * @param string $topic 议题
      * @param array $context 上下文
-     * @param GraphState $state 状态
+     * @param State $state 状态
      * @return float 权重 (0-1)
      */
-    protected function calculateAgentWeight(AgentInterface $agent, string $topic, array $context, GraphState $state): float
+    protected function calculateAgentWeight(AgentInterface $agent, string $topic, array $context, State $state): float
     {
         // 简化实现：基于智能体历史表现和相关性计算权重
         $historicalAccuracy = 0.8; // 假设历史准确率
         $relevance = 0.7; // 假设相关性
         
         return ($historicalAccuracy * 0.6) + ($relevance * 0.4);
+    }
+    
+    public function collectOpinions(array $agents, string $topic, State $state): array
+    {
+        // 高级意见收集：
+        // 1. 考虑智能体专长
+        // 2. 考虑历史准确性
+        // 3. 收集详细意见
+        
+        $opinions = [];
+        
+        foreach ($agents as $agent) {
+            // 获取详细意见
+            $opinion = $this->getDetailedAgentOpinion($agent, $topic, $state);
+            if ($opinion !== null) {
+                $opinions[$agent->getName()] = $opinion;
+            }
+        }
+        
+        return $opinions;
+    }
+    
+    public function integrateOpinions(array $opinions, State $state): mixed
+    {
+        // 使用高级整合机制
+        return $this->integrateOpinionsIntelligently($opinions, [], $state);
     }
 }

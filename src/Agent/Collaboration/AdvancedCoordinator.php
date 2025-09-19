@@ -2,81 +2,38 @@
 
 namespace App\Agent\Collaboration;
 
+use App\UnifiedGraph\State\State;
 use App\Agent\AgentInterface;
-use App\LangGraph\State\GraphState;
 
 class AdvancedCoordinator extends BaseCoordinator
 {
-    public function coordinate(array $agents, GraphState $state): GraphState
+    public function coordinate(State $state): State
     {
-        // 高级协调逻辑：
-        // 1. 动态评估智能体状态
-        // 2. 识别和解决潜在冲突
-        // 3. 优化资源分配
-        // 4. 调整执行计划
+        $context = $state->getData();
         
-        $state = parent::coordinate($agents, $state);
+        // 模拟协调过程
+        $coordinationResult = [
+            'coordinated_at' => date('Y-m-d H:i:s'),
+            'coordination_status' => 'success',
+            'conflicts_resolved' => rand(0, 5)
+        ];
         
-        // 检查智能体间的潜在冲突
-        $conflicts = $this->detectConflicts($agents, $state);
-        if (!empty($conflicts)) {
-            $state = $this->resolveConflicts($conflicts, $state);
-        }
-        
-        // 优化资源分配
-        $state = $this->optimizeResourceAllocation($agents, $state);
+        $state->merge([
+            'coordination' => $coordinationResult,
+            'phase' => 'coordinated'
+        ]);
         
         return $state;
-    }
-    
-    public function handleDependencies(array $dependencies, GraphState $state): GraphState
-    {
-        // 高级依赖处理：
-        // 1. 分析依赖图
-        // 2. 识别循环依赖
-        // 3. 重新排序执行顺序
-        
-        $state = parent::handleDependencies($dependencies, $state);
-        
-        // 检查循环依赖
-        if ($this->hasCircularDependencies($dependencies)) {
-            $state->set('circular_dependencies_detected', true);
-            // 尝试解决循环依赖
-            $dependencies = $this->resolveCircularDependencies($dependencies);
-            $state->set('dependencies', $dependencies);
-        }
-        
-        return $state;
-    }
-    
-    public function adjustPriorities(array $agents, GraphState $state): array
-    {
-        // 高级优先级调整：
-        // 1. 基于任务紧急程度
-        // 2. 基于资源需求
-        // 3. 基于依赖关系
-        
-        // 获取任务优先级信息
-        $taskPriorities = $state->get('task_priorities', []);
-        
-        // 根据优先级调整智能体顺序
-        usort($agents, function($a, $b) use ($taskPriorities) {
-            $priorityA = $taskPriorities[$a->getName()] ?? 0;
-            $priorityB = $taskPriorities[$b->getName()] ?? 0;
-            return $priorityB <=> $priorityA; // 高优先级在前
-        });
-        
-        return $agents;
     }
     
     /**
      * 检测智能体间的冲突
      * 
      * @param array $agents 智能体列表
-     * @param GraphState $state 状态
+     * @param State $state 状态
      * @return array 冲突列表
      */
-    protected function detectConflicts(array $agents, GraphState $state): array
+    protected function detectConflicts(array $agents, State $state): array
     {
         // 简化实现：检查是否有多个智能体请求相同资源
         $resourceRequests = $state->get('resource_requests', []);
@@ -99,14 +56,14 @@ class AdvancedCoordinator extends BaseCoordinator
      * 解决冲突
      * 
      * @param array $conflicts 冲突列表
-     * @param GraphState $state 状态
-     * @return GraphState 更新后的状态
+     * @param State $state 状态
+     * @return State 更新后的状态
      */
-    protected function resolveConflicts(array $conflicts, GraphState $state): GraphState
+    protected function resolveConflicts(array $conflicts, State $state): State
     {
         foreach ($conflicts as $conflict) {
             // 简化实现：记录冲突
-            $state->set('conflict_' . $conflict['type'], $conflict);
+            $state->merge(['conflict_' . $conflict['type'] => $conflict]);
         }
         
         return $state;
@@ -116,13 +73,13 @@ class AdvancedCoordinator extends BaseCoordinator
      * 优化资源分配
      * 
      * @param array $agents 智能体列表
-     * @param GraphState $state 状态
-     * @return GraphState 更新后的状态
+     * @param State $state 状态
+     * @return State 更新后的状态
      */
-    protected function optimizeResourceAllocation(array $agents, GraphState $state): GraphState
+    protected function optimizeResourceAllocation(array $agents, State $state): State
     {
         // 简化实现：记录优化尝试
-        $state->set('resource_allocation_optimized', true);
+        $state->merge(['resource_allocation_optimized' => true]);
         return $state;
     }
     

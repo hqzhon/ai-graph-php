@@ -9,13 +9,18 @@ class ModelConfig
     public function __construct(array $config = [])
     {
         // 从环境变量加载默认配置
+        // 在HTTP请求上下文中，使用getenv()而不是依赖$_ENV或$_SERVER
         $this->config = [
-            'deepseek_api_key' => getenv('DEEPSEEK_API_KEY'),
-            'qwen_api_key' => getenv('QWEN_API_KEY'),
+            'deepseek_api_key' => getenv('DEEPSEEK_API_KEY') ?: '',
+            'qwen_api_key' => getenv('QWEN_API_KEY') ?: '',
         ];
         
-        // 合并传入的配置
-        $this->config = array_merge($this->config, $config);
+        // 只合并非空的配置值
+        foreach ($config as $key => $value) {
+            if (!empty($value)) {
+                $this->config[$key] = $value;
+            }
+        }
     }
     
     /**

@@ -1,0 +1,20 @@
+<?php
+
+use App\Examples\Console\Application;
+use App\Examples\Console\Command\HelloWorldCommand;
+use App\Examples\Console\Command\RunWorkflowCommand;
+use App\Examples\Console\Command\TestModelCommand;
+
+// Bootstrap the application
+$container = require __DIR__ . '/../bootstrap.php';
+
+// Create the application
+$app = new Application($container);
+
+// Register commands
+$app->addCommand(HelloWorldCommand::class);
+$app->addCommand(RunWorkflowCommand::class);
+$app->addCommand(TestModelCommand::class);
+
+// Run the application
+$app->run($argv);

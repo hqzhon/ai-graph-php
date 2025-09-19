@@ -50,3 +50,10 @@ config/model.php
 # Runtime
 *.pid
 *.sock
+
+# Test files
+bin/test-model-controller.php
+langgraph-sdk/
+docs/
+GEMINI.md
+QWEN.md

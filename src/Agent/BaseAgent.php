@@ -2,17 +2,16 @@
 
 namespace App\Agent;
 
-use App\LangGraph\State\GraphState;
+use App\UnifiedGraph\State\State;
 
 abstract class BaseAgent implements AgentInterface
 {
     protected $name;
-    protected $description;
+    protected $memory = [];
     
-    public function __construct(string $name, string $description = '')
+    public function __construct(string $name)
     {
         $this->name = $name;
-        $this->description = $description;
     }
     
     public function getName(): string
@@ -20,56 +19,39 @@ abstract class BaseAgent implements AgentInterface
         return $this->name;
     }
     
-    public function getDescription(): string
+    public function setMemory(array $memory): void
     {
-        return $this->description;
+        $this->memory = $memory;
     }
     
-    public function act(GraphState $state): GraphState
+    public function getMemory(): array
     {
-        // 执行前钩子
-        $state = $this->beforeAct($state);
-        
-        // 执行智能体逻辑
-        $state = $this->process($state);
-        
-        // 执行后钩子
-        $state = $this->afterAct($state);
-        
-        return $state;
+        return $this->memory;
     }
     
     /**
-     * 智能体执行前的钩子方法
+     * 更新记忆
      * 
-     * @param GraphState $state 当前状态
-     * @return GraphState 更新后的状态
+     * @param array $updates 要更新的记忆数据
+     * @return void
      */
-    protected function beforeAct(GraphState $state): GraphState
+    protected function updateMemory(array $updates): void
     {
-        // 记录智能体开始执行
-        $state->set('agent_' . $this->name . '_start_time', microtime(true));
-        return $state;
+        $this->memory = array_merge($this->memory, $updates);
     }
     
     /**
-     * 智能体执行后的钩子方法
+     * 获取上下文信息
      * 
-     * @param GraphState $state 当前状态
-     * @return GraphState 更新后的状态
+     * @param State|null $context 上下文状态
+     * @return array 上下文信息
      */
-    protected function afterAct(GraphState $state): GraphState
+    protected function getContext(?State $context = null): array
     {
-        // 记录智能体执行结束
-        $state->set('agent_' . $this->name . '_end_time', microtime(true));
-        return $state;
+        if ($context === null) {
+            return [];
+        }
+        
+        return $context->getData();
     }
-    
-    /**
-     * 智能体的核心处理逻辑，子类需要实现此方法
-     * 
-     * @param GraphState $state 当前状态
-     * @return GraphState 更新后的状态
-     */
-    abstract protected function process(GraphState $state): GraphState;
 }

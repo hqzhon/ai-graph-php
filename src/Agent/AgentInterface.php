@@ -2,7 +2,7 @@
 
 namespace App\Agent;
 
-use App\LangGraph\State\GraphState;
+use App\UnifiedGraph\State\State;
 
 interface AgentInterface
 {
@@ -14,17 +14,26 @@ interface AgentInterface
     public function getName(): string;
     
     /**
-     * 智能体执行动作
+     * 智能体执行任务
      * 
-     * @param GraphState $state 当前状态
-     * @return GraphState 更新后的状态
+     * @param string $task 任务描述
+     * @param State|null $context 上下文状态
+     * @return State 执行结果状态
      */
-    public function act(GraphState $state): GraphState;
+    public function execute(string $task, ?State $context = null): State;
     
     /**
-     * 获取智能体描述
+     * 设置智能体的记忆
      * 
-     * @return string
+     * @param array $memory 记忆数据
+     * @return void
      */
-    public function getDescription(): string;
+    public function setMemory(array $memory): void;
+    
+    /**
+     * 获取智能体的记忆
+     * 
+     * @return array
+     */
+    public function getMemory(): array;
 }

@@ -2,93 +2,50 @@
 
 namespace App\Agent\Collaboration;
 
-use App\Agent\AgentInterface;
-use App\LangGraph\State\GraphState;
+use App\UnifiedGraph\State\State;
 
-class BaseCollaborationProtocol implements CollaborationProtocolInterface
+abstract class BaseCollaborationProtocol implements CollaborationProtocolInterface
 {
-    protected $agents = [];
-    protected $taskHistory = [];
+    protected $name;
     
-    public function initialize(array $agents): void
+    public function __construct(string $name = "BaseCollaborationProtocol")
     {
-        $this->agents = $agents;
+        $this->name = $name;
     }
     
-    public function requestCollaboration(AgentInterface $agent, string $request, GraphState $state)
+    public function getName(): string
     {
-        // 记录协作请求
-        $this->logCollaborationRequest($agent->getName(), $request);
-        
-        // 简单的协作逻辑：广播请求给所有其他智能体
-        $responses = [];
-        foreach ($this->agents as $otherAgent) {
-            if ($otherAgent->getName() !== $agent->getName()) {
-                // 模拟其他智能体的响应
-                $response = $this->simulateAgentResponse($otherAgent, $request, $state);
-                if ($response !== null) {
-                    $responses[$otherAgent->getName()] = $response;
-                }
-            }
-        }
-        
-        return $responses;
-    }
-    
-    public function assignTask(string $task, array $eligibleAgents, GraphState $state): ?string
-    {
-        // 简单的任务分配逻辑：选择第一个合适的智能体
-        if (!empty($eligibleAgents)) {
-            $selectedAgent = reset($eligibleAgents);
-            $this->taskHistory[] = [
-                'task' => $task,
-                'assigned_to' => $selectedAgent->getName(),
-                'timestamp' => microtime(true)
-            ];
-            
-            return $selectedAgent->getName();
-        }
-        
-        return null;
-    }
-    
-    public function resolveConflict(array $conflict, GraphState $state): bool
-    {
-        // 简单的冲突解决逻辑：记录冲突并返回true表示已处理
-        $state->set('conflict_resolved', true);
-        $state->set('conflict_details', $conflict);
-        
-        return true;
+        return $this->name;
     }
     
     /**
-     * 记录协作请求
+     * 初始化协作状态
      * 
-     * @param string $agentName 智能体名称
-     * @param string $request 请求内容
-     * @return void
+     * @param string $task 协作任务
+     * @return State 初始状态
      */
-    protected function logCollaborationRequest(string $agentName, string $request): void
+    protected function initializeState(string $task): State
     {
-        $state = new GraphState();
-        $state->set('collaboration_request', [
-            'agent' => $agentName,
-            'request' => $request,
-            'timestamp' => microtime(true)
+        return new State([
+            'task' => $task,
+            'phase' => 'initialization',
+            'agents' => [],
+            'communications' => [],
+            'decisions' => [],
+            'context' => []
         ]);
     }
     
     /**
-     * 模拟智能体响应
+     * 更新协作状态
      * 
-     * @param AgentInterface $agent 智能体
-     * @param string $request 请求
-     * @param GraphState $state 状态
-     * @return mixed 响应
+     * @param State $state 当前状态
+     * @param array $updates 更新数据
+     * @return State 更新后的状态
      */
-    protected function simulateAgentResponse(AgentInterface $agent, string $request, GraphState $state)
+    protected function updateState(State $state, array $updates): State
     {
-        // 简单的响应逻辑
-        return "Response from " . $agent->getName() . " to request: " . $request;
+        $state->merge($updates);
+        return $state;
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Agent;
 
-use App\LangGraph\State\GraphState;
+use App\UnifiedGraph\State\State;
 
 class ResponseAgent extends BaseAgent
 {
@@ -10,16 +10,29 @@ class ResponseAgent extends BaseAgent
     
     public function __construct(string $name, string $response, string $description = '')
     {
-        parent::__construct($name, $description);
+        parent::__construct($name);
         $this->response = $response;
     }
     
-    protected function process(GraphState $state): GraphState
+    public function execute(string $task, ?State $context = null): State
     {
-        // 设置响应
-        $state->set('agent_response', $this->response);
-        $state->set('agent_' . $this->name . '_response', $this->response);
+        // 获取上下文信息
+        $contextData = $this->getContext($context);
         
-        return $state;
+        // 创建新的状态
+        $newState = new State($contextData);
+        
+        // 设置响应
+        $newState->set('response', $this->response);
+        $newState->set('agent_response', $this->response);
+        $newState->set('agent_' . $this->name . '_response', $this->response);
+        
+        // 更新记忆
+        $this->updateMemory([
+            'last_task' => $task,
+            'last_response' => $this->response
+        ]);
+        
+        return $newState;
     }
 }

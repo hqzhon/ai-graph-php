@@ -2,7 +2,7 @@
 
 namespace App\Agent\Communication;
 
-use App\LangGraph\State\GraphState;
+use App\UnifiedGraph\State\State;
 
 class SharedState
 {
@@ -10,7 +10,7 @@ class SharedState
     
     public function __construct()
     {
-        $this->state = new GraphState();
+        $this->state = new State();
     }
     
     /**
@@ -51,9 +51,9 @@ class SharedState
     /**
      * 获取完整状态
      * 
-     * @return GraphState
+     * @return State
      */
-    public function getState(): GraphState
+    public function getState(): State
     {
         return $this->state;
     }

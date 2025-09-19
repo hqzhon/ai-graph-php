@@ -7,7 +7,7 @@ use App\Agent\Collaboration\AdvancedSwarmIntelligence;
 use App\Agent\ResponseAgent;
 use App\Model\Factory\ModelFactory;
 use App\Model\Config\ModelConfig;
-use App\LangGraph\State\GraphState;
+use App\UnifiedGraph\State\State;
 
 class SwarmIntelligenceExample
 {
@@ -28,10 +28,9 @@ class SwarmIntelligenceExample
         
         // 创建群体智能实例
         $swarmIntelligence = new AdvancedSwarmIntelligence();
-        $swarmIntelligence->initialize($agents);
         
         // 创建初始状态
-        $state = new GraphState([
+        $state = new State([
             'problem' => 'How to optimize a complex system?',
             'environment_state' => [
                 'complexity' => 'high',
@@ -40,8 +39,8 @@ class SwarmIntelligenceExample
             ]
         ]);
         
-        // 模拟群体行为
-        $state = $swarmIntelligence->simulateSwarmBehavior($agents, $state);
+        // 应用群体智能
+        $updatedState = $swarmIntelligence->applySwarmIntelligence($state);
         
         // 生成解决方案
         $solutions = [
@@ -51,15 +50,19 @@ class SwarmIntelligenceExample
             'Solution D: General approach from agent_4'
         ];
         
-        // 优化解决方案
-        $optimizedSolution = $swarmIntelligence->optimizeSolutions($solutions, $state);
+        // 模拟群体行为结果
+        $swarmResult = $updatedState->get('swarm_intelligence', []);
         
         // 评估性能
-        $performance = $swarmIntelligence->evaluatePerformance($agents, $state);
+        $performance = [
+            'swarm_size' => $swarmResult['swarm_size'] ?? 0,
+            'intelligence_score' => $swarmResult['collective_intelligence_score'] ?? 0,
+            'optimization_applied' => $swarmResult['optimization_applied'] ?? false
+        ];
         
         return [
-            'final_state' => $state->getData(),
-            'optimized_solution' => $optimizedSolution,
+            'final_state' => $updatedState->getData(),
+            'solutions' => $solutions,
             'performance_metrics' => $performance
         ];
     }

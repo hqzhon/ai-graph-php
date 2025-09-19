@@ -2,36 +2,15 @@
 
 namespace App\Agent\Collaboration;
 
-use App\Agent\AgentInterface;
-use App\LangGraph\State\GraphState;
+use App\UnifiedGraph\State\State;
 
 interface TaskAllocatorInterface
 {
     /**
-     * 分配任务
+     * 分配任务给智能体
      * 
-     * @param string $task 任务描述
-     * @param array $agents 可用的智能体
-     * @param GraphState $state 当前状态
-     * @return string|null 被分配的智能体名称
+     * @param State $state 当前状态
+     * @return State 任务分配后的状态
      */
-    public function allocateTask(string $task, array $agents, GraphState $state): ?string;
-    
-    /**
-     * 重新分配任务
-     * 
-     * @param string $task 任务描述
-     * @param array $agents 可用的智能体
-     * @param GraphState $state 当前状态
-     * @return string|null 新的被分配的智能体名称
-     */
-    public function reallocateTask(string $task, array $agents, GraphState $state): ?string;
-    
-    /**
-     * 获取智能体负载
-     * 
-     * @param AgentInterface $agent 智能体
-     * @return float 负载值（0-1）
-     */
-    public function getAgentLoad(AgentInterface $agent): float;
+    public function allocateTasks(State $state): State;
 }

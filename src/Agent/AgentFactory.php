@@ -30,17 +30,18 @@ class AgentFactory
      * 创建基于模型的智能体
      * 
      * @param string $name 智能体名称
-     * @param string $modelType 模型类型
+     * @param string $model 模型名称
      * @param string $systemPrompt 系统提示
      * @param string $description 智能体描述
      * @return ModelBasedAgent
      */
     public function createModelBasedAgent(
         string $name, 
-        string $modelType, 
+        string $model, 
         string $systemPrompt = 'You are a helpful assistant.', 
         string $description = ''
     ): ModelBasedAgent {
-        return new ModelBasedAgent($name, $this->modelFactory, $modelType, $systemPrompt, $description);
+        $modelClient = $this->modelFactory->createClient($model);
+        return new ModelBasedAgent($name, $modelClient, $systemPrompt, $description);
     }
 }

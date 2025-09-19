@@ -2,42 +2,27 @@
 
 namespace App\Agent\Collaboration;
 
-use App\Agent\AgentInterface;
-use App\LangGraph\State\GraphState;
+use App\UnifiedGraph\State\State;
 
-class BaseCoordinator implements CoordinatorInterface
+abstract class BaseCoordinator implements CoordinatorInterface
 {
-    public function coordinate(array $agents, GraphState $state): GraphState
+    protected $name;
+    
+    public function __construct(string $name = "BaseCoordinator")
     {
-        // 基础协调逻辑：
-        // 1. 检查智能体状态
-        // 2. 确保没有冲突的活动
-        // 3. 更新状态
-        
-        $state->set('coordination_timestamp', microtime(true));
-        $state->set('active_agents', array_map(function($agent) {
-            return $agent->getName();
-        }, $agents));
-        
-        return $state;
+        $this->name = $name;
     }
     
-    public function handleDependencies(array $dependencies, GraphState $state): GraphState
+    public function getName(): string
     {
-        // 处理依赖关系
-        $state->set('dependencies', $dependencies);
-        $state->set('dependencies_handled', true);
-        
-        return $state;
+        return $this->name;
     }
     
-    public function adjustPriorities(array $agents, GraphState $state): array
-    {
-        // 基础优先级调整：按名称排序
-        usort($agents, function($a, $b) {
-            return strcmp($a->getName(), $b->getName());
-        });
-        
-        return $agents;
-    }
+    /**
+     * 协调智能体间的协作
+     * 
+     * @param State $state 当前状态
+     * @return State 协调后的状态
+     */
+    abstract public function coordinate(State $state): State;
 }

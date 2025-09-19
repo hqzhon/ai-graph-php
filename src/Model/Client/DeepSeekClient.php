@@ -2,6 +2,9 @@
 
 namespace App\Model\Client;
 
+/**
+ * DeepSeek API client with improved streaming capabilities
+ */
 class DeepSeekClient extends AbstractModelClient
 {
     public function __construct(string $apiKey)
@@ -17,22 +20,40 @@ class DeepSeekClient extends AbstractModelClient
             'stream' => false
         ];
         
-        // 合并额外选项
+        // Merge additional options
         $data = array_merge($data, $options);
         
-        // 发送请求
-        $response = $this->sendRequest('/chat/completions', $data);
-        
-        // 检查响应是否有错误
-        if (isset($response['error'])) {
-            throw new \RuntimeException('API Error: ' . $response['error']['message']);
+        try {
+            // Send request
+            $response = $this->sendRequest('/chat/completions', $data);
+            
+            // Check if response has errors
+            if (isset($response['error'])) {
+                throw new \RuntimeException('API Error: ' . $response['error']['message'] ?? 'Unknown API error');
+            }
+            
+            // Return model response
+            if (isset($response['choices'][0]['message']['content'])) {
+                return $response['choices'][0]['message']['content'];
+            }
+            
+            throw new \RuntimeException('Invalid API response format: ' . json_encode($response));
+        } catch (\Exception $e) {
+            throw new \RuntimeException('DeepSeek API call failed: ' . $e->getMessage());
         }
+    }
+    
+    public function streamChatComplete(array $messages, array $options = []): \Generator
+    {
+        $data = [
+            'model' => $this->modelName,
+            'messages' => $messages,
+            'stream' => true
+        ];
         
-        // 返回模型响应
-        if (isset($response['choices'][0]['message']['content'])) {
-            return $response['choices'][0]['message']['content'];
-        }
+        $data = array_merge($data, $options);
         
-        throw new \RuntimeException('Invalid API response format');
+        // Use the improved streaming method from the parent class
+        yield from $this->streamRequest('/chat/completions', $data);
     }
 }

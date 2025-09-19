@@ -13,20 +13,22 @@ class Template
     
     public function render($template, $variables = [])
     {
-        $templateFile = $this->templateDir . '/' . $template . '.php';
-        
-        if (!file_exists($templateFile)) {
-            throw new \Exception("Template file not found: $templateFile");
+        $viewFile = $this->templateDir . '/' . $template . '.php';
+        if (!file_exists($viewFile)) {
+            throw new \Exception("Template file not found: {$viewFile}");
         }
-        
-        // 提取变量到局部作用域
-        extract($variables);
-        
-        // 开启输出缓冲
+
+        // Render the specific view file to a variable
         ob_start();
-        include $templateFile;
+        extract($variables);
+        include $viewFile;
         $content = ob_get_clean();
-        
-        return $content;
+
+        // Now render the main layout, passing the view content and other variables
+        $layoutFile = $this->templateDir . '/layout.php';
+        ob_start();
+        extract($variables);
+        include $layoutFile;
+        return ob_get_clean();
     }
 }

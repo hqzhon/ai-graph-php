@@ -2,45 +2,38 @@
 
 namespace App\Agent\Collaboration;
 
-use App\Agent\AgentInterface;
-use App\LangGraph\State\GraphState;
+use App\UnifiedGraph\State\State;
 
 interface CollaborationProtocolInterface
 {
     /**
-     * 初始化协作协议
+     * 获取协作协议名称
      * 
-     * @param array $agents 参与的智能体
-     * @return void
+     * @return string
      */
-    public function initialize(array $agents): void;
+    public function getName(): string;
     
     /**
-     * 智能体请求协作
+     * 初始化协作
      * 
-     * @param AgentInterface $agent 请求的智能体
-     * @param string $request 请求内容
-     * @param GraphState $state 当前状态
-     * @return mixed 协作结果
+     * @param string $task 协作任务
+     * @return State 初始状态
      */
-    public function requestCollaboration(AgentInterface $agent, string $request, GraphState $state);
+    public function initialize(string $task): State;
     
     /**
-     * 分配任务给智能体
+     * 执行协作步骤
      * 
-     * @param string $task 任务描述
-     * @param array $eligibleAgents 合适的智能体列表
-     * @param GraphState $state 当前状态
-     * @return string|null 被选中的智能体名称
+     * @param State $state 当前状态
+     * @return State 更新后的状态
      */
-    public function assignTask(string $task, array $eligibleAgents, GraphState $state): ?string;
+    public function executeStep(State $state): State;
     
     /**
-     * 协调智能体间的冲突
+     * 检查协作是否完成
      * 
-     * @param array $conflict 冲突信息
-     * @param GraphState $state 当前状态
-     * @return bool 是否解决冲突
+     * @param State $state 当前状态
+     * @return bool 是否完成
      */
-    public function resolveConflict(array $conflict, GraphState $state): bool;
+    public function isComplete(State $state): bool;
 }

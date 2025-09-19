@@ -7,12 +7,14 @@ A minimal viable product (MVP) implementation of a PHP application with Workflow
 - Basic MVC structure with routing
 - Template engine for rendering views
 - Integrated Symfony Workflow component for state management
-- Custom LangGraph-like workflow engine implementation
+- Unified graph implementation combining the best features of both approaches
 - Model client factory supporting DeepSeek and Qwen
 - Multi-agent system with communication and coordination
 - Advanced collaborative AI system with swarm intelligence
 - Article management with state transitions (draft, review, published, rejected)
 - Service container for dependency management
+- Web interface for testing AI models
+- Web interface for multi-agent workflow orchestration
 - Console commands support
 - PHPUnit testing setup
 
@@ -25,7 +27,7 @@ A minimal viable product (MVP) implementation of a PHP application with Workflow
 
 1. Clone the repository:
    ```
-   git clone https://github.com/hqzhon/ai-graph-php
+   git clone <repository-url>
    ```
 
 2. Install dependencies:
@@ -43,6 +45,23 @@ composer start
 ```
 
 Then open your browser and navigate to `http://localhost:8000`.
+
+#### Testing AI Models via Web Interface
+
+1. Navigate to `http://localhost:8000/model-test`
+2. Enter your API keys for DeepSeek and/or Qwen
+3. Select a model and enter a prompt
+4. Click "Test Model" to see the results
+
+**Note:** Your API keys are not stored and are only used for the current request.
+
+#### Multi-Agent Workflow Orchestration
+
+1. Navigate to `http://localhost:8000/multi-agent`
+2. Enter your API keys for DeepSeek and/or Qwen
+3. Choose a predefined workflow or create a custom one
+4. Configure agents and tasks
+5. Click "Run Workflow" to execute the multi-agent workflow
 
 ### Console Commands
 
@@ -74,16 +93,6 @@ php bin/test-models.php
 Or using the console command:
 ```
 php bin/console model:test
-```
-
-Test LangGraph implementation:
-```
-php bin/test-langgraph.php
-```
-
-Debug LangGraph implementation:
-```
-php bin/debug-langgraph.php
 ```
 
 Test multi-agent system:
@@ -140,21 +149,16 @@ composer test
 │   ├── Container/       # Service container
 │   ├── Console/         # Console commands
 │   ├── Exception/       # Custom exceptions
-│   ├── Graph/           # Custom workflow engine
-│   │   ├── Node/        # Workflow nodes
-│   │   ├── Edge/        # Workflow edges
-│   │   ├── State/       # State management
-│   │   ├── Executor/    # Workflow executor
-│   │   └── Example/     # Example workflows
-│   └── LangGraph/       # LangGraph-like implementation
-│       ├── Node/        # LangGraph nodes
-│       ├── Edge/        # LangGraph edges
-│       ├── State/       # LangGraph state management
-│       ├── Example/     # Example LangGraph workflows
-│       ├── GraphInterface.php  # Graph interface
-│       ├── BaseGraph.php       # Base graph implementation
-│       ├── StateGraph.php      # State graph implementation
-│       └── CompiledGraph.php   # Compiled graph execution
+│   └── UnifiedGraph/    # Unified graph implementation
+│       ├── Node/        # Unified nodes
+│       ├── Edge/        # Unified edges
+│       ├── State/       # Unified state management
+│       ├── Executor/    # Unified executor
+│       ├── Example/     # Example unified workflows
+│       ├── GraphInterface.php  # Unified graph interface
+│       ├── BaseGraph.php       # Unified base graph implementation
+│       ├── StateGraph.php      # Unified state graph implementation
+│       └── CompiledGraph.php   # Unified compiled graph execution
 ├── templates/           # Template files
 ├── tests/               # Test files
 ├── var/                 # Variable files (logs, cache, etc.)
@@ -163,7 +167,7 @@ composer test
 
 ## Workflow Engines
 
-This project includes three workflow engines:
+This project includes a unified workflow engine that combines the best features of multiple approaches:
 
 ### 1. Symfony Workflow Component
 
@@ -175,34 +179,25 @@ Used for managing article states:
   - reject (review → rejected)
   - rework (rejected → draft)
 
-### 2. Custom Workflow Engine
+### 2. Unified Graph Implementation
 
-A custom implementation of workflow concepts:
-- **Nodes**: Represent steps or tasks in a workflow
-- **Edges**: Connect nodes and define execution paths
-- **State**: Maintains the current state of the workflow
-- **Executor**: Runs the workflow by executing nodes and following edges
-
-### 3. LangGraph-like Implementation
-
-A PHP implementation of core LangGraph concepts:
-- **Graph**: Represents the workflow structure
-- **Nodes**: Callable functions that perform actions
-- **Edges**: Connections between nodes
-- **Conditional Edges**: Edges that are selected based on conditions
-- **State**: Maintains the current state of the workflow
-- **Compilation**: Converts the graph into an executable form
+A unified implementation that combines the best features of different workflow approaches:
+- **Flexible Node Types**: Supports both callable functions and Node objects
+- **Unified State Management**: Single State interface and implementation
+- **Conditional Edges**: Supports complex conditional routing
+- **Streaming Execution**: Can stream intermediate states during execution
+- **Mixed Workflows**: Allows combining different node types in a single workflow
 
 #### Usage Example
 
 ```php
-use App\LangGraph\StateGraph;
-use App\LangGraph\State\GraphState;
+use App\UnifiedGraph\StateGraph;
+use App\UnifiedGraph\State\State;
 
 // Create a state graph
-$graph = new StateGraph(GraphState::class);
+$graph = new StateGraph(State::class);
 
-// Add nodes
+// Add nodes (callable functions)
 $graph->addNode('start', function ($state) {
     return ['step' => 'start', 'message' => 'Workflow started'];
 });
@@ -225,11 +220,13 @@ $graph->setFinishPoint('end');
 
 // Compile and execute
 $compiled = $graph->compile();
-$initialState = new GraphState(['workflow' => 'example']);
+$initialState = new State(['workflow' => 'example']);
 $finalState = $compiled->execute($initialState);
 
 print_r($finalState->getData());
 ```
+
+For more detailed examples, see `src/UnifiedGraph/README.md`.
 
 ## Multi-Agent System
 
@@ -373,3 +370,14 @@ echo $response;
 ## License
 
 MIT
+
+## Documentation
+
+Additional documentation can be found in the `docs/` directory, including:
+
+- Implementation summaries
+- Testing results
+- Refactoring documentation
+- Development process notes
+
+These documents provide detailed information about various aspects of the project's development.

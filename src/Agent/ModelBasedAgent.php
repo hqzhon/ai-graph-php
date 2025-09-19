@@ -2,59 +2,71 @@
 
 namespace App\Agent;
 
-use App\LangGraph\State\GraphState;
-use App\Model\Factory\ModelFactory;
+use App\UnifiedGraph\State\State;
+use App\Model\Client\ModelClientInterface;
 
 class ModelBasedAgent extends BaseAgent
 {
-    private $modelFactory;
-    private $modelType;
-    private $systemPrompt;
+    protected $modelClient;
+    protected $systemPrompt;
     
     public function __construct(
-        string $name, 
-        ModelFactory $modelFactory, 
-        string $modelType, 
-        string $systemPrompt = 'You are a helpful assistant.',
-        string $description = ''
+        string $name,
+        ModelClientInterface $modelClient,
+        string $systemPrompt = "You are a helpful AI assistant."
     ) {
-        parent::__construct($name, $description);
-        $this->modelFactory = $modelFactory;
-        $this->modelType = $modelType;
+        parent::__construct($name);
+        $this->modelClient = $modelClient;
         $this->systemPrompt = $systemPrompt;
     }
     
-    protected function process(GraphState $state): GraphState
+    public function streamExecute(string $task, ?State $context = null): \Generator
     {
-        // 获取用户输入
-        $userInput = $state->get('user_input', '');
-        
-        if (empty($userInput)) {
-            $state->set('agent_' . $this->name . '_response', 'No input provided.');
-            return $state;
+        $contextData = $this->getContext($context);
+        $messages = [
+            ['role' => 'system', 'content' => $this->systemPrompt]
+        ];
+        if (isset($contextData['history']) && is_array($contextData['history'])) {
+            foreach ($contextData['history'] as $message) {
+                $messages[] = $message;
+            }
         }
-        
-        try {
-            // 创建模型客户端
-            $client = $this->modelFactory->createClient($this->modelType);
-            
-            // 构造消息
-            $messages = [
-                ['role' => 'system', 'content' => $this->systemPrompt],
-                ['role' => 'user', 'content' => $userInput]
-            ];
-            
-            // 发送请求并获取响应
-            $response = $client->chatComplete($messages);
-            
-            // 设置响应
-            $state->set('agent_' . $this->name . '_response', $response);
-            $state->set('agent_response', $response);
-        } catch (\Exception $e) {
-            $state->set('agent_' . $this->name . '_error', $e->getMessage());
-            $state->set('agent_' . $this->name . '_response', 'Sorry, I encountered an error: ' . $e->getMessage());
+        $messages[] = ['role' => 'user', 'content' => $task];
+
+        $stream = $this->modelClient->streamChatComplete($messages);
+
+        $fullResponse = '';
+        foreach ($stream as $chunk) {
+            $fullResponse .= $chunk;
+            $newState = new State($contextData);
+            $newState->merge([
+                'agent' => $this->name,
+                'task' => $task,
+                'response' => $fullResponse, // Yielding the aggregated response so far
+            ]);
+            yield $newState;
         }
-        
-        return $state;
+
+        // Final update after stream is complete
+        $this->updateMemory([
+            'last_task' => $task,
+            'last_response' => $fullResponse
+        ]);
+
+        $finalState = new State($contextData);
+        $finalState->merge([
+            'agent' => $this->name,
+            'task' => $task,
+            'response' => $fullResponse,
+            'history' => array_merge(
+                $contextData['history'] ?? [],
+                [
+                    ['role' => 'user', 'content' => $task],
+                    ['role' => 'assistant', 'content' => $fullResponse]
+                ]
+            )
+        ]);
+        yield $finalState;
     }
+}
 }
