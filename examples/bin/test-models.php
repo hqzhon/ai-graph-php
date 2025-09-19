@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 
 use App\Model\Factory\ModelFactory;
 use App\Model\Config\ModelConfig;
@@ -9,7 +9,12 @@ use App\Model\Config\ModelConfig;
 echo "=== Model Client Demo ===\n\n";
 
 // 创建配置
-$config = new ModelConfig();
+$configFile = __DIR__ . '/../../config/model.php';
+if (file_exists($configFile)) {
+    $config = ModelConfig::fromFile($configFile);
+} else {
+    $config = new ModelConfig();
+}
 
 // 创建工厂
 $factory = new ModelFactory($config->all());

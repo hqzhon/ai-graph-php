@@ -300,13 +300,23 @@ This project includes an advanced collaborative AI system with the following fea
 - **群体决策**: Distributed and collective decision-making
 - **群体智能**: Swarm intelligence simulation and optimization
 
+### Advanced LangGraph Features
+
+The project now includes enhanced LangGraph capabilities:
+
+1. **Channel-based State Management**: Implements channel mechanisms similar to Python LangGraph for advanced state management
+2. **Checkpoint and Persistence**: Supports saving and restoring workflow state
+3. **Interruption and Resumption**: Can interrupt execution at specific nodes and resume later
+4. **Enhanced Error Handling**: Comprehensive exception hierarchy for better error management
+5. **State Tracking**: Built-in state change tracking for debugging and monitoring
+
 ### Usage Example
 
 ```php
-use App\Agent\Example\AdvancedCollaborativeWorkflow;
+use App\UnifiedGraph\Example\AdvancedWorkflowExample;
 
 // Run an advanced collaborative workflow
-$finalState = AdvancedCollaborativeWorkflow::run(
+$finalState = AdvancedWorkflowExample::run(
     'Research and develop a solution for reducing energy consumption in data centers'
 );
 

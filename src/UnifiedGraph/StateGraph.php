@@ -2,9 +2,16 @@
 
 namespace App\UnifiedGraph;
 
+use App\UnifiedGraph\State\StateInterface;
+use App\UnifiedGraph\Node\NodeInterface;
+use App\UnifiedGraph\Checkpoint\CheckpointSaverInterface;
+use App\UnifiedGraph\Exception\GraphValidationException;
+
 class StateGraph extends BaseGraph
 {
     private $stateClass;
+    private $channels = [];
+    private $checkpointSaver = null;
     
     public function __construct(string $stateClass)
     {
@@ -14,6 +21,55 @@ class StateGraph extends BaseGraph
     public function getStateClass(): string
     {
         return $this->stateClass;
+    }
+    
+    /**
+     * 添加通道定义
+     * 
+     * @param string $key 通道键名
+     * @param mixed $channelDef 通道定义
+     * @return self
+     */
+    public function addChannel(string $key, $channelDef): self
+    {
+        $this->channels[$key] = $channelDef;
+        return $this;
+    }
+    
+    /**
+     * 批量添加通道定义
+     * 
+     * @param array $channels 通道定义数组
+     * @return self
+     */
+    public function addChannels(array $channels): self
+    {
+        foreach ($channels as $key => $channelDef) {
+            $this->addChannel($key, $channelDef);
+        }
+        return $this;
+    }
+    
+    /**
+     * 获取通道定义
+     * 
+     * @return array
+     */
+    public function getChannels(): array
+    {
+        return $this->channels;
+    }
+    
+    /**
+     * 设置检查点保存器
+     * 
+     * @param CheckpointSaverInterface $checkpointSaver
+     * @return self
+     */
+    public function setCheckpointSaver(CheckpointSaverInterface $checkpointSaver): self
+    {
+        $this->checkpointSaver = $checkpointSaver;
+        return $this;
     }
     
     public function addStreamNode(string $key, callable $action): self
@@ -35,45 +91,14 @@ class StateGraph extends BaseGraph
             $this->conditionalEdges,
             $this->entryPoint,
             $this->finishPoints,
-            $this->stateClass
+            $this->stateClass,
+            $this->channels, // Pass channels
+            $this->checkpointSaver // Pass checkpoint saver
         );
     }
     
-    private function validateGraph(): void
+    protected function validateGraph(): void
     {
-        // 检查起始节点是否存在
-        if ($this->entryPoint === null) {
-            throw new \RuntimeException('Entry point not set');
-        }
-        
-        if (!isset($this->nodes[$this->entryPoint])) {
-            throw new \RuntimeException("Entry point node '{$this->entryPoint}' not found");
-        }
-        
-        // 检查所有边的节点是否存在
-        foreach ($this->edges as $start => $ends) {
-            if (!isset($this->nodes[$start])) {
-                throw new \RuntimeException("Node '$start' not found for edge");
-            }
-            
-            foreach ($ends as $end) {
-                if (!isset($this->nodes[$end]) && !isset($this->finishPoints[$end])) {
-                    throw new \RuntimeException("Node '$end' not found for edge");
-                }
-            }
-        }
-        
-        // 检查条件边的节点是否存在
-        foreach ($this->conditionalEdges as $start => $edge) {
-            if (!isset($this->nodes[$start])) {
-                throw new \RuntimeException("Node '$start' not found for conditional edge");
-            }
-            
-            foreach ($edge['mapping'] as $conditionResult => $end) {
-                if (!isset($this->nodes[$end]) && !isset($this->finishPoints[$end])) {
-                    throw new \RuntimeException("Node '$end' not found for conditional edge mapping");
-                }
-            }
-        }
+        parent::validateGraph();
     }
 }

@@ -3,6 +3,7 @@
 namespace App\UnifiedGraph;
 
 use App\UnifiedGraph\Node\NodeInterface;
+use App\UnifiedGraph\Exception\GraphValidationException;
 
 abstract class BaseGraph implements GraphInterface
 {
@@ -54,6 +55,44 @@ abstract class BaseGraph implements GraphInterface
     {
         $this->finishPoints[$key] = true;
         return $this;
+    }
+    
+    protected function validateGraph(): void
+    {
+        // 检查起始节点是否存在
+        if ($this->entryPoint === null) {
+            throw new GraphValidationException('Entry point not set');
+        }
+        
+        if (!isset($this->nodes[$this->entryPoint])) {
+            throw new GraphValidationException("Entry point node '{$this->entryPoint}' not found");
+        }
+        
+        // 检查所有边的节点是否存在
+        foreach ($this->edges as $start => $ends) {
+            if (!isset($this->nodes[$start])) {
+                throw new GraphValidationException("Node '$start' not found for edge");
+            }
+            
+            foreach ($ends as $end) {
+                if (!isset($this->nodes[$end]) && !isset($this->finishPoints[$end])) {
+                    throw new GraphValidationException("Node '$end' not found for edge");
+                }
+            }
+        }
+        
+        // 检查条件边的节点是否存在
+        foreach ($this->conditionalEdges as $start => $edge) {
+            if (!isset($this->nodes[$start])) {
+                throw new GraphValidationException("Node '$start' not found for conditional edge");
+            }
+            
+            foreach ($edge['mapping'] as $conditionResult => $end) {
+                if (!isset($this->nodes[$end]) && !isset($this->finishPoints[$end])) {
+                    throw new GraphValidationException("Node '$end' not found for conditional edge mapping");
+                }
+            }
+        }
     }
     
     abstract public function compile(): CompiledGraph;
