@@ -1,6 +1,6 @@
 <?php
 
-namespace App\UnifiedGraph\State;
+namespace UnifiedGraph\State;
 
 class StateTracker
 {

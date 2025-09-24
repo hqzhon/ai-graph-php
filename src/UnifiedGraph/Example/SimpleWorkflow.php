@@ -1,11 +1,11 @@
 <?php
 
-namespace App\UnifiedGraph\Example;
+namespace UnifiedGraph\Example;
 
-use App\UnifiedGraph\Executor\Executor;
-use App\UnifiedGraph\Node\AbstractNode;
-use App\UnifiedGraph\Edge\Edge;
-use App\UnifiedGraph\State\State;
+use UnifiedGraph\Executor\Executor;
+use UnifiedGraph\Node\AbstractNode;
+use UnifiedGraph\Edge\Edge;
+use UnifiedGraph\State\State;
 
 // 定义节点类
 class StartNode extends AbstractNode

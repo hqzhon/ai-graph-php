@@ -1,6 +1,6 @@
 <?php
 
-namespace App\UnifiedGraph\Node;
+namespace UnifiedGraph\Node;
 
 abstract class AbstractNode implements NodeInterface
 {

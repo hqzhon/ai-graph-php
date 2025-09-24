@@ -1,59 +1,40 @@
 # Dependencies
 /vendor/
+/composer.lock
 
 # Environment variables
-.env
-.env.local
-.env.*.local
+/.env
+/.env.local
+/.env.*.local
 
 # IDE
 /.idea/
-.vscode/
+/.vscode/
 *.swp
 *.swo
-*.DS_Store
-Thumbs.db
-
-# OS
 .DS_Store
-Thumbs.db
-desktop.ini
 
 # Logs
-/var/logs/*.log
-logs/*.log
+/logs/
+*.log
 
 # Cache
-cache/
-tmp/
-temp/
+/cache/
+/tmp/
+
+# Testing
+/phpunit.xml
+/.phpunit.result.cache
 
 # Composer
-composer.phar
-composer.lock
-
-# Checkpoints
-/tmp/agent_checkpoints/
-
-# PHPUnit
-coverage/
-phpunit.xml
-phpunit.xml.dist
+/composer.phar
 
 # Build artifacts
 /build/
-/dist/
 
-# Configuration (local)
-config/model.php
-
-# Runtime
-*.pid
-*.sock
-
-# Test files
-bin/test-model-controller.php
+# Sensitive files
+/config/*.local
+/config/secrets.php
 langgraph-sdk/
-docs/
 GEMINI.md
 QWEN.md

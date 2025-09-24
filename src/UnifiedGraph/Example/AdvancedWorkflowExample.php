@@ -1,11 +1,11 @@
 <?php
 
-namespace App\UnifiedGraph\Example;
+namespace UnifiedGraph\Example;
 
-use App\UnifiedGraph\StateGraph;
-use App\UnifiedGraph\State\State;
-use App\UnifiedGraph\State\ChannelsState;
-use App\UnifiedGraph\Checkpoint\MemoryCheckpointSaver;
+use UnifiedGraph\StateGraph;
+use UnifiedGraph\State\State;
+use UnifiedGraph\State\ChannelsState;
+use UnifiedGraph\Checkpoint\MemoryCheckpointSaver;
 
 class AdvancedWorkflowExample
 {

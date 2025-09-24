@@ -1,11 +1,11 @@
 <?php
 
-namespace App\UnifiedGraph\Executor;
+namespace UnifiedGraph\Executor;
 
-use App\UnifiedGraph\Node\NodeInterface;
-use App\UnifiedGraph\Edge\EdgeInterface;
-use App\UnifiedGraph\State\StateInterface;
-use App\UnifiedGraph\State\State;
+use UnifiedGraph\Node\NodeInterface;
+use UnifiedGraph\Edge\EdgeInterface;
+use UnifiedGraph\State\StateInterface;
+use UnifiedGraph\State\State;
 
 class Executor
 {

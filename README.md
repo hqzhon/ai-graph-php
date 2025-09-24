@@ -1,3 +1,208 @@
+# LangGraph PHP
+
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/langgraph/langgraph-php.svg?style=flat-square)](https://packagist.org/packages/langgraph/langgraph-php)
+[![Tests](https://img.shields.io/github/actions/workflow/status/your-username/langgraph-php/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/your-username/langgraph-php/actions/workflows/run-tests.yml)
+[![Total Downloads](https://img.shields.io/packagist/dt/langgraph/langgraph-php.svg?style=flat-square)](https://packagist.org/packages/langgraph/langgraph-php)
+
+A PHP implementation of LangGraph for building language model workflows with agents, state management, and graph execution.
+
+## Introduction
+
+LangGraph PHP is a PHP library that brings the power of LangGraph to the PHP ecosystem. It allows you to build complex workflows with language models, manage state, and execute graphs with conditional logic.
+
+## Features
+
+- **Graph-based Workflows**: Build complex workflows using a graph structure
+- **State Management**: Advanced state management with channels and reducers
+- **Agent System**: Create and manage AI agents with different capabilities
+- **Model Integration**: Support for multiple language models (DeepSeek, Qwen, etc.)
+- **Streaming Support**: Real-time streaming of model responses
+- **Checkpointing**: Save and restore workflow states
+- **Interruption Handling**: Pause and resume workflows at specific points
+- **Tool System**: Extend agent capabilities with custom tools
+
+## Requirements
+
+- PHP 7.4 or higher
+- Composer
+
+## Installation
+
+You can install the package via composer:
+
+```bash
+composer require langgraph/langgraph-php
+```
+
+## Basic Usage
+
+### Creating a Simple Workflow
+
+```php
+use LangGraph\UnifiedGraph\StateGraph;
+use LangGraph\UnifiedGraph\State\State;
+
+// Create a state graph
+$graph = new StateGraph(State::class);
+
+// Add nodes
+$graph->addNode('start', function ($state) {
+    return ['message' => 'Hello from start node'];
+});
+
+$graph->addNode('process', function ($state) {
+    return ['message' => 'Processing: ' . ($state['message'] ?? '')];
+});
+
+$graph->addNode('end', function ($state) {
+    return ['message' => 'Finished: ' . ($state['message'] ?? ''), 'completed' => true];
+});
+
+// Add edges
+$graph->addEdge('start', 'process');
+$graph->addEdge('process', 'end');
+
+// Set entry and finish points
+$graph->setEntryPoint('start');
+$graph->setFinishPoint('end');
+
+// Compile and execute
+$compiled = $graph->compile();
+$initialState = new State(['workflow' => 'simple_example']);
+$finalState = $compiled->execute($initialState);
+
+print_r($finalState->getData());
+```
+
+### Working with Agents
+
+```php
+use LangGraph\Agent\AgentFactory;
+use LangGraph\Model\Factory\ModelFactory;
+use LangGraph\Model\Config\ModelConfig;
+
+// Create model configuration
+$modelConfig = new ModelConfig([
+    'deepseek_api_key' => 'your-api-key'
+]);
+
+// Create model factory and agent factory
+$modelFactory = new ModelFactory($modelConfig->all());
+$agentFactory = new AgentFactory($modelFactory);
+
+// Create a model-based agent
+$agent = $agentFactory->createModelBasedAgent(
+    'researcher',
+    'deepseek',
+    'You are a research assistant. Provide concise answers.'
+);
+
+// Use the agent
+$context = new State(['topic' => 'climate change']);
+$result = $agent->execute('What are the main causes of climate change?', $context);
+```
+
+### Conditional Edges
+
+```php
+// Add conditional edges based on state
+$graph->addConditionalEdges('process', function ($state) {
+    // Decision logic based on state
+    $score = $state['confidence'] ?? 0;
+    if ($score > 0.8) {
+        return 'end';
+    } elseif ($score > 0.5) {
+        return 'review';
+    } else {
+        return 'retry';
+    }
+}, [
+    'end' => 'end',
+    'review' => 'review',
+    'retry' => 'process'
+]);
+```
+
+## Advanced Features
+
+### State Channels
+
+LangGraph PHP supports advanced state management through channels:
+
+```php
+use LangGraph\UnifiedGraph\State\ChannelsState;
+
+$graph = new StateGraph(ChannelsState::class);
+
+// Add channels with different behaviors
+$graph->addChannels([
+    'messages' => [
+        'type' => 'binary_operator',
+        'operator' => function ($a, $b) {
+            return array_merge($a, $b);
+        },
+        'default' => []
+    ],
+    'counter' => [
+        'type' => 'binary_operator',
+        'operator' => function ($a, $b) {
+            return $a + $b;
+        },
+        'default' => 0
+    ]
+]);
+```
+
+### Checkpointing
+
+Save and restore workflow states:
+
+```php
+use LangGraph\UnifiedGraph\Checkpoint\MemoryCheckpointSaver;
+
+$checkpointSaver = new MemoryCheckpointSaver();
+$graph->setCheckpointSaver($checkpointSaver);
+
+// Execute with checkpointing
+$threadId = 'workflow_123';
+$finalState = $compiled->execute($initialState, $threadId);
+
+// List checkpoints
+$checkpoints = $checkpointSaver->list($threadId);
+```
+
+### Interruption Handling
+
+Pause workflows at specific points:
+
+```php
+try {
+    // Interrupt after 'process' node
+    $finalState = $compiled->execute($initialState, 'thread_1', [], ['process']);
+} catch (InterruptedException $e) {
+    echo "Workflow interrupted at node: " . $e->getNodeKey();
+}
+```
+
+## Testing
+
+```bash
+composer test
+```
+
+## Contributing
+
+Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details.
+
+## License
+
+The MIT License (MIT). Please see [License File](LICENSE) for more information.
+
+## Credits
+
+- [Your Name](https://github.com/your-username)
+- [All Contributors](../../contributors)
+
 # PHP MVP with Workflow Engine
 
 A minimal viable product (MVP) implementation of a PHP application with Workflow engine integration, built as a demonstration of how to structure a PHP project with modern practices.
@@ -63,6 +268,17 @@ Then open your browser and navigate to `http://localhost:8000`.
 4. Configure agents and tasks
 5. Click "Run Workflow" to execute the multi-agent workflow
 
+### Web Demo with Laravel + React
+
+This project includes a web demonstration using Laravel backend and React frontend:
+
+1. Navigate to the webapp directory:
+   ```
+   cd examples/webapp
+   ```
+
+2. Follow the setup instructions in `examples/webapp/README.md`
+
 ### Console Commands
 
 Run console commands:
@@ -104,6 +320,17 @@ Test advanced collaborative AI system:
 ```
 php bin/test-advanced-collaboration.php
 ```
+
+### Web Demo with Laravel + React
+
+This project includes a web demonstration using Laravel backend and React frontend:
+
+1. Navigate to the webapp directory:
+   ```
+   cd examples/webapp
+   ```
+
+2. Follow the setup instructions in `examples/webapp/README.md`
 
 ### Running Tests
 
@@ -227,58 +454,6 @@ print_r($finalState->getData());
 ```
 
 For more detailed examples, see `src/UnifiedGraph/README.md`.
-
-## Multi-Agent System
-
-This project includes a multi-agent system with the following features:
-
-### Core Components
-
-1. **Agents**: Autonomous entities that can perform actions
-2. **Communication**: Message passing between agents
-3. **Memory**: Short-term and context memory management
-4. **Tools**: Plugin system for extending agent capabilities
-5. **Monitoring**: Execution tracking and debugging
-6. **Error Handling**: Retry mechanisms and state recovery
-
-### Agent Types
-
-- **ResponseAgent**: Simple agent that returns predefined responses
-- **ModelBasedAgent**: Agent that uses AI models (DeepSeek, Qwen) for responses
-
-### Usage Example
-
-```php
-use App\Agent\AgentFactory;
-use App\Agent\Tool\ToolManager;
-use App\Agent\Tool\CalculatorTool;
-use App\Model\Factory\ModelFactory;
-use App\Model\Config\ModelConfig;
-
-// Create factories
-$modelConfig = new ModelConfig();
-$modelFactory = new ModelFactory($modelConfig->all());
-$agentFactory = new AgentFactory($modelFactory);
-
-// Create agents
-$plannerAgent = $agentFactory->createModelBasedAgent(
-    'planner',
-    'deepseek',
-    'You are a planning assistant.'
-);
-
-$executorAgent = $agentFactory->createModelBasedAgent(
-    'executor',
-    'qwen',
-    'You are an execution assistant.'
-);
-
-// Create tool manager and register tools
-$toolManager = new ToolManager();
-$toolManager->register(new CalculatorTool());
-
-// Use agents in a workflow
-```
 
 ## Advanced Collaborative AI System
 

@@ -1,18 +1,24 @@
 <?php
 
-namespace App\UnifiedGraph\Exception;
+namespace UnifiedGraph\Exception;
 
-class LangGraphException extends \RuntimeException
+use Exception;
+use Throwable;
+
+/**
+ * Base exception class for LangGraph operations
+ */
+class LangGraphException extends Exception
 {
-    protected $context = [];
-    
-    public function __construct(string $message, array $context = [], int $code = 0, \Throwable $previous = null)
+    protected $context;
+
+    public function __construct($message = "", $context = [], $code = 0, Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
         $this->context = $context;
     }
-    
-    public function getContext(): array
+
+    public function getContext()
     {
         return $this->context;
     }

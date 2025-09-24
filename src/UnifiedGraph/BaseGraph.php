@@ -1,9 +1,9 @@
 <?php
 
-namespace App\UnifiedGraph;
+namespace UnifiedGraph;
 
-use App\UnifiedGraph\Node\NodeInterface;
-use App\UnifiedGraph\Exception\GraphValidationException;
+use UnifiedGraph\Node\NodeInterface;
+use UnifiedGraph\Exception\GraphValidationException;
 
 abstract class BaseGraph implements GraphInterface
 {
@@ -95,5 +95,5 @@ abstract class BaseGraph implements GraphInterface
         }
     }
     
-    abstract public function compile(): CompiledGraph;
+    abstract public function compile(): \UnifiedGraph\CompiledGraph;
 }

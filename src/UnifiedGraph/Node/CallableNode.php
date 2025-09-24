@@ -1,6 +1,6 @@
 <?php
 
-namespace App\UnifiedGraph\Node;
+namespace UnifiedGraph\Node;
 
 class CallableNode extends AbstractNode
 {

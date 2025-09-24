@@ -1,10 +1,10 @@
 <?php
 
-namespace App\UnifiedGraph\Example;
+namespace UnifiedGraph\Example;
 
-use App\UnifiedGraph\StateGraph;
-use App\UnifiedGraph\Node\AbstractNode;
-use App\UnifiedGraph\State\State;
+use UnifiedGraph\StateGraph;
+use UnifiedGraph\Node\AbstractNode;
+use UnifiedGraph\State\State;
 
 // 自定义节点类
 class CustomProcessNode extends AbstractNode

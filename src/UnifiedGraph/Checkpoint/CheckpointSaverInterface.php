@@ -1,8 +1,8 @@
 <?php
 
-namespace App\UnifiedGraph\Checkpoint;
+namespace UnifiedGraph\Checkpoint;
 
-use App\UnifiedGraph\State\StateInterface;
+use UnifiedGraph\State\StateInterface;
 
 interface CheckpointSaverInterface
 {

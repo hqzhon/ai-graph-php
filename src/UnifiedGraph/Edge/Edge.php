@@ -1,6 +1,6 @@
 <?php
 
-namespace App\UnifiedGraph\Edge;
+namespace UnifiedGraph\Edge;
 
 class Edge implements EdgeInterface
 {

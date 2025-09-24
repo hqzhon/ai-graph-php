@@ -1,11 +1,22 @@
 <?php
 
-namespace App\UnifiedGraph\Exception;
+namespace UnifiedGraph\Exception;
 
-class GraphValidationException extends LangGraphException
+/**
+ * Exception thrown when graph validation fails
+ */
+class GraphValidationException extends \Exception
 {
+    private array $context;
+
     public function __construct(string $message, array $context = [], int $code = 0, \Throwable $previous = null)
     {
-        parent::__construct($message, $context, $code, $previous);
+        $this->context = $context;
+        parent::__construct($message, $code, $previous);
+    }
+
+    public function getContext(): array
+    {
+        return $this->context;
     }
 }

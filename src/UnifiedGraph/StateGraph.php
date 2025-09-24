@@ -1,11 +1,12 @@
 <?php
 
-namespace App\UnifiedGraph;
+namespace UnifiedGraph;
 
-use App\UnifiedGraph\State\StateInterface;
-use App\UnifiedGraph\Node\NodeInterface;
-use App\UnifiedGraph\Checkpoint\CheckpointSaverInterface;
-use App\UnifiedGraph\Exception\GraphValidationException;
+use UnifiedGraph\State\StateInterface;
+use UnifiedGraph\Node\NodeInterface;
+use UnifiedGraph\Checkpoint\CheckpointSaverInterface;
+use UnifiedGraph\Exception\GraphValidationException;
+use UnifiedGraph\CompiledGraph;
 
 class StateGraph extends BaseGraph
 {

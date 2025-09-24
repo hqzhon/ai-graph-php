@@ -1,16 +1,16 @@
 <?php
 
-namespace App\UnifiedGraph;
+namespace UnifiedGraph;
 
-use App\UnifiedGraph\State\StateInterface;
-use App\UnifiedGraph\State\State;
-use App\UnifiedGraph\State\ChannelsState;
-use App\UnifiedGraph\Node\CallableNode;
-use App\UnifiedGraph\Node\NodeInterface;
-use App\UnifiedGraph\Checkpoint\CheckpointSaverInterface;
-use App\UnifiedGraph\Exception\LangGraphException;
-use App\UnifiedGraph\Exception\NodeExecutionException;
-use App\UnifiedGraph\Exception\InterruptedException;
+use UnifiedGraph\State\StateInterface;
+use UnifiedGraph\State\State;
+use UnifiedGraph\State\ChannelsState;
+use UnifiedGraph\Node\CallableNode;
+use UnifiedGraph\Node\NodeInterface;
+use UnifiedGraph\Checkpoint\CheckpointSaverInterface;
+use UnifiedGraph\Exception\NodeExecutionException;
+use UnifiedGraph\Exception\InterruptedException;
+use UnifiedGraph\Exception\LangGraphException;
 
 class CompiledGraph
 {

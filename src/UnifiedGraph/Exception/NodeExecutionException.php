@@ -1,6 +1,6 @@
 <?php
 
-namespace App\UnifiedGraph\Exception;
+namespace UnifiedGraph\Exception;
 
 class NodeExecutionException extends LangGraphException
 {

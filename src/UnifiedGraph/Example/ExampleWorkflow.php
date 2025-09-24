@@ -1,9 +1,9 @@
 <?php
 
-namespace App\UnifiedGraph\Example;
+namespace UnifiedGraph\Example;
 
-use App\UnifiedGraph\StateGraph;
-use App\UnifiedGraph\State\State;
+use UnifiedGraph\StateGraph;
+use UnifiedGraph\State\State;
 
 class ExampleWorkflow
 {

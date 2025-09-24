@@ -1,9 +1,9 @@
 <?php
 
-namespace App\UnifiedGraph;
+namespace UnifiedGraph;
 
-use App\UnifiedGraph\State\StateInterface;
-use App\UnifiedGraph\Node\NodeInterface;
+use UnifiedGraph\State\StateInterface;
+use UnifiedGraph\Node\NodeInterface;
 
 interface GraphInterface
 {
@@ -56,5 +56,5 @@ interface GraphInterface
      * 
      * @return CompiledGraph
      */
-    public function compile(): CompiledGraph;
+    public function compile(): \UnifiedGraph\CompiledGraph;
 }
