@@ -1,133 +1,206 @@
-# LangGraph Web Demo
+# LangGraph PHP MVP - Web Application
 
-This is a web demonstration of the LangGraph PHP SDK using:
-- Laravel backend for API endpoints
-- React + Vite + Tailwind CSS frontend for the user interface
+A comprehensive web demonstration of the LangGraph PHP SDK showcasing advanced AI workflow capabilities with a modern web interface.
 
-## Relationship to CLI Scripts
+## 🌟 Features
 
-This web demo complements the existing CLI scripts in the `examples/bin/` directory by providing:
-- A graphical user interface for easier interaction
-- Visual representation of results
-- Modern web-based demonstration
+### Core Workflows
+- **LangGraph Simple Workflow** - Basic graph execution with state management
+- **LangGraph Advanced Workflow** - Complex workflows with channel-based state management
+- **Multi-Agent System** - Collaborative AI agents with dynamic task allocation
+- **Workflow Validation** - Comprehensive workflow validation with custom rules
+- **AI Chat Interface** - Interactive chat with context management
+- **Article Workflow** - Content management with state transitions
 
-The CLI scripts in `examples/bin/` remain available for:
-- Direct command-line access
-- Automated testing and scripting
-- Developer debugging
-- Headless environments
+### Tech Stack
+- **Backend**: Laravel PHP framework
+- **Frontend**: React + Vite + Tailwind CSS
+- **Architecture**: Unified Graph Implementation with LangGraph PHP SDK
+- **API**: RESTful API with streaming support for real-time updates
 
-Both approaches use the same underlying LangGraph PHP SDK.
-
-## Project Structure
+## 📋 Project Structure
 
 ```
 webapp/
-├── backend/          # Laravel backend application
-├── frontend/         # React frontend application
-└── start.sh          # Development server startup script
+├── backend/              # Laravel backend application
+│   ├── app/
+│   │   ├── Http/
+│   │   │   └── Controllers/    # API controllers
+│   │   └── ...
+│   ├── routes/
+│   │   └── api.php           # API routes
+│   ├── storage/
+│   │   └── framework/        # Runtime files (ignored by git)
+│   └── ...
+├── frontend/             # React frontend application
+│   ├── src/
+│   │   ├── components/      # React components
+│   │   ├── services/        # API service calls
+│   │   └── ...
+│   └── ...
+├── start.sh              # Development server startup script
+└── test_apis.py          # API validation script
 ```
 
-## Getting Started
+## 🚀 Getting Started
 
 ### Prerequisites
 
 - PHP 8.1 or higher
 - Composer
-- Node.js and npm
-- Laravel CLI (optional)
+- Node.js (v16 or higher) and npm
+- Redis server (for session management)
+- Git
 
-### Backend Setup
+### Installation
 
-1. Navigate to the backend directory:
+1. **Clone the repository**:
    ```bash
+   git clone https://github.com/hqzhon/langgraph-php
+   cd examples/webapp
+   ```
+
+2. **Backend Setup**:
+   ```bash
+   # Navigate to backend directory
    cd backend
-   ```
 
-2. Install PHP dependencies:
-   ```bash
+   # Install PHP dependencies
    composer install
-   ```
 
-3. Generate application key:
-   ```bash
+   # Generate application key
    php artisan key:generate
+
+   # Create symbolic link for storage (if needed)
+   php artisan storage:link
+
+   # Set up environment variables
+   cp .env.example .env
+   # Edit .env file to configure your database and API keys
    ```
 
-4. Start the Laravel development server:
+3. **Frontend Setup**:
    ```bash
-   php artisan serve
-   ```
-   
-   The backend will be available at `http://localhost:8000`
+   # Navigate to frontend directory
+   cd ../frontend
 
-### Frontend Setup
-
-1. Navigate to the frontend directory:
-   ```bash
-   cd frontend
-   ```
-
-2. Install JavaScript dependencies:
-   ```bash
+   # Install JavaScript dependencies
    npm install
    ```
 
-3. Start the Vite development server:
-   ```bash
-   npm run dev
-   ```
-   
-   The frontend will be available at `http://localhost:5173`
+### Running the Application
 
-### Running Both Servers
-
-You can start both servers simultaneously using the provided script:
+#### Option 1: Using the start script (recommended for development)
 ```bash
+cd /path/to/examples/webapp
 ./start.sh
 ```
 
-## API Endpoints
+#### Option 2: Manual startup
+1. **Start the backend server**:
+   ```bash
+   cd backend
+   php artisan serve --port=8000
+   ```
 
-The Laravel backend provides the following API endpoints:
+2. **Start the frontend server**:
+   ```bash
+   cd frontend
+   npm run dev
+   ```
 
-- `POST /api/langgraph/simple-workflow` - Execute a simple LangGraph workflow
-- `POST /api/langgraph/advanced-workflow` - Execute an advanced LangGraph workflow with channels
+### API Endpoints
 
-## Features Demonstrated
+The application provides several API endpoints for different features:
 
-1. **Simple Workflow Execution** - Basic LangGraph workflow with three nodes
-2. **Advanced Workflow Execution** - LangGraph workflow with channel-based state management
-3. **Frontend-Backend Integration** - React frontend communicating with Laravel backend
-4. **Tailwind CSS Styling** - Modern UI with Tailwind CSS
+#### LangGraph Workflows
+- `POST /api/langgraph/simple-workflow` - Execute simple LangGraph workflow
+- `POST /api/langgraph/advanced-workflow` - Execute advanced LangGraph workflow
 
-## How It Works
+#### Multi-Agent System
+- `POST /api/multi-agent/stream` - Stream multi-agent workflow results
 
-1. The React frontend sends requests to the Laravel backend
-2. The Laravel backend executes LangGraph workflows using the PHP SDK
-3. Results are returned to the frontend and displayed in a user-friendly interface
+#### Workflow Validation
+- `POST /api/workflow-validation/validate` - Validate workflow structure
+- `GET /api/workflow-validation/report/{validationId}` - Get validation report
 
-## Development
+#### Chat Interface
+- `POST /api/chat/process` - Process chat conversation
+- `GET /api/chat/history/{conversationId}` - Get chat history
 
-### Backend Development
+#### Article Workflow
+- `GET /api/article/{id?}` - Get article information
+- `POST /api/article/{id}/transition/{transition}` - Transition article state
 
-The backend code is located in `backend/` and uses standard Laravel conventions:
-- Controllers: `app/Http/Controllers/`
-- Routes: `routes/api.php`
-- Configuration: `config/`
+## 🔧 Configuration
 
-### Frontend Development
+### Environment Variables
 
-The frontend code is located in `frontend/` and uses:
-- React components in `src/`
-- Tailwind CSS for styling
-- Vite for development and building
+In `backend/.env`, you can configure:
 
-## Contributing
+```env
+APP_NAME="LangGraph PHP MVP"
+APP_ENV=local
+APP_KEY=
+APP_DEBUG=true
+APP_URL=http://localhost
 
-This demo is part of the LangGraph PHP SDK project. Contributions should focus on:
-1. Demonstrating SDK features
-2. Improving the user interface
-3. Adding new workflow examples
+DB_CONNECTION=sqlite
+# Or other database configurations
 
-The webapp is designed to showcase the SDK capabilities without modifying the core SDK code.
+REDIS_CLIENT=predis
+REDIS_HOST=127.0.0.1
+REDIS_PASSWORD=null
+REDIS_PORT=6379
+
+# API Keys (optional for testing)
+QWEN_API_KEY=your_qwen_api_key
+DEEPSEEK_API_KEY=your_deepseek_api_key
+```
+
+## 🧪 Testing
+
+### API Validation
+Run the comprehensive API test suite:
+```bash
+cd /path/to/examples/webapp
+python3 test_apis.py
+```
+
+### Core Features Testing
+Run the comprehensive test suite for core features:
+```bash
+cd /path/to/examples/webapp
+python3 test_core_features.py
+```
+
+## 🌐 Architecture
+
+### LangGraph PHP SDK Integration
+The application uses the LangGraph PHP SDK to implement graph-based AI workflows. The core implementation includes:
+
+1. **Unified Graph Implementation** - Combines multiple workflow approaches
+2. **State Management** - Channel-based state with change tracking
+3. **Node Execution** - Support for both callable functions and Node objects
+4. **Conditional Edges** - Dynamic workflow routing based on conditions
+
+### Frontend Components
+- **LangGraph Demo** - Visual demonstration of workflow execution
+- **Multi-Agent Interface** - Real-time streaming of agent collaboration
+- **Chat Interface** - Interactive AI conversation with context
+- **Workflow Validation UI** - Visual representation of workflow validation
+- **Article Workflow** - Content management with state visualization
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+### Development Guidelines
+- Follow PSR-12 coding standards for PHP
+- Use React best practices for frontend components
+- Write tests for new features
+- Document API endpoints in the README

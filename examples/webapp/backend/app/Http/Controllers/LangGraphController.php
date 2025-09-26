@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
-use UnifiedGraph\StateGraph;
-use UnifiedGraph\State\State;
+use LangGraph\UnifiedGraph\StateGraph;
+use LangGraph\UnifiedGraph\State\State;
 
 class LangGraphController extends Controller
 {

@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\StreamedResponse;
-use UnifiedGraph\StateGraph;
-use UnifiedGraph\State\State;
+use LangGraph\UnifiedGraph\StateGraph;
+use LangGraph\UnifiedGraph\State\State;
 
 class WorkflowValidationController extends Controller
 {
@@ -190,7 +190,7 @@ class WorkflowValidationController extends Controller
             return response()->stream(function () use ($compiled, $initialState) {
                 try {
                     // Send initial message
-                    echo 'data: ' . json_encode([
+                    echo "data: " . json_encode([
                         'status' => 'started',
                         'message' => 'Starting workflow validation...'
                     ]) . "\n\n";
@@ -210,22 +210,22 @@ class WorkflowValidationController extends Controller
                     ];
                     
                     foreach ($progressSteps as $step) {
-                        echo 'data: ' . json_encode($step) . "\n\n";
+                        echo "data: " . json_encode($step) . "\n\n";
                         flush();
                         usleep(500000); // 0.5 second delay for demo
                     }
                     
                     // Send final result
-                    echo 'data: ' . json_encode($data) . "\n\n";
+                    echo "data: " . json_encode($data) . "\n\n";
                     flush();
 
                     // Send finish message
-                    echo 'data: ' . json_encode([
+                    echo "data: " . json_encode([
                         'status' => 'finished'
                     ]) . "\n\n";
                     flush();
                 } catch (\Exception $e) {
-                    echo 'data: ' . json_encode([
+                    echo "data: " . json_encode([
                         'status' => 'error',
                         'error' => $e->getMessage()
                     ]) . "\n\n";

@@ -4,18 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use UnifiedGraph\StateGraph;
-use UnifiedGraph\State\ChannelsState;
+use LangGraph\UnifiedGraph\StateGraph;
+use LangGraph\UnifiedGraph\State\ChannelsState;
 use Illuminate\Support\Facades\Log;
 
-// Import the Model classes from lib directory
-require_once base_path('lib/langgraph/Model/Factory/ModelFactory.php');
-require_once base_path('lib/langgraph/Model/Client/ModelClientInterface.php');
-require_once base_path('lib/langgraph/Model/Client/AbstractModelClient.php');
-require_once base_path('lib/langgraph/Model/Client/QwenClient.php');
-require_once base_path('lib/langgraph/Model/Client/DeepSeekClient.php');
-
-use App\Model\Factory\ModelFactory;
+use LangGraph\Model\Factory\ModelFactory;
 
 class ChatGraphController extends Controller
 {

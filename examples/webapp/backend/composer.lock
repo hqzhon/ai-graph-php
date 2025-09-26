@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9c491b8531eec05ba41a11d9276a5749",
+    "content-hash": "3f1398f99aeb51bd073648cce5055053",
     "packages": [
         {
             "name": "brick/math",
@@ -1052,6 +1052,64 @@
                 }
             ],
             "time": "2025-08-22T14:27:06+00:00"
+        },
+        {
+            "name": "langgraph/langgraph-php",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hqzhon/langgraph-php.git",
+                "reference": "0c299d703896f0fee50c722abfebde4dad4f0c10"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hqzhon/langgraph-php/zipball/0c299d703896f0fee50c722abfebde4dad4f0c10",
+                "reference": "0c299d703896f0fee50c722abfebde4dad4f0c10",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.4",
+                "psr/container": "^1.0 || ^2.0"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^1.0",
+                "phpunit/phpunit": "^9.0",
+                "squizlabs/php_codesniffer": "^3.6",
+                "symfony/var-dumper": "^5.0 || ^6.0"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "LangGraph\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Your Name",
+                    "email": "your.email@example.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A PHP implementation of LangGraph for building language model workflows",
+            "keywords": [
+                "Agent",
+                "ai",
+                "chatbot",
+                "langgraph",
+                "language-model",
+                "llm",
+                "workflow"
+            ],
+            "support": {
+                "issues": "https://github.com/your-username/langgraph-php/issues",
+                "source": "https://github.com/your-username/langgraph-php"
+            },
+            "time": "2025-09-24T05:25:10+00:00"
         },
         {
             "name": "laravel/framework",
@@ -8231,7 +8289,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {},
+    "stability-flags": {
+        "langgraph/langgraph-php": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
