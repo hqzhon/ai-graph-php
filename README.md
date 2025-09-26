@@ -1,7 +1,6 @@
 # LangGraph PHP SDK
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/langgraph/langgraph-php.svg?style=flat-square)](https://packagist.org/packages/langgraph/langgraph-php)
-[![Tests](https://img.shields.io/github/actions/workflow/status/your-username/langgraph-php/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/your-username/langgraph-php/actions/workflows/run-tests.yml)
 
 A powerful PHP implementation of Python's LangGraph. This SDK enables you to build stateful, multi-agent applications with complex, graph-based logic. It provides the core components to create robust and scalable AI workflows in your PHP projects.
 

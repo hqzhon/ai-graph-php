@@ -1,7 +1,6 @@
 # LangGraph PHP SDK
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/langgraph/langgraph-php.svg?style=flat-square)](https://packagist.org/packages/langgraph/langgraph-php)
-[![Tests](https://img.shields.io/github/actions/workflow/status/your-username/langgraph-php/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/your-username/langgraph-php/actions/workflows/run-tests.yml)
 
 这是 Python LangGraph 的一个强大 PHP 实现。该 SDK 允许您使用复杂的、基于图的逻辑来构建有状态的多智能体应用。它提供了在您的 PHP 项目中创建健壮且可扩展的 AI 工作流所需的核心组件。
 
