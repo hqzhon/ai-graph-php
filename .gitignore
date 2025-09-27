@@ -39,3 +39,4 @@ langgraph-sdk/
 GEMINI.md
 QWEN.md
 LANGGRAPH_PHP_ANALYSIS.md
+config/models.php
